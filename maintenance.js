@@ -1,17 +1,17 @@
 
 // نظام الصيانة التلقائي لموقع صفقاتي
-// تم إنشاؤه تلقائياً من لوحة التحكم في 15‏/8‏/2025 6:01:26 ص
+// تم إنشاؤه تلقائياً من لوحة التحكم في 15‏/8‏/2025 6:09:25 ص
 
 (function() {
   'use strict';
   
   const MAINTENANCE_CONFIG = {
-  "id": "default-1755226885866",
-  "is_maintenance_mode": false,
+  "id": "default-1755227365547",
+  "is_maintenance_mode": true,
   "maintenance_message": "الموقع قيد الصيانة، سنعود قريباً",
   "site_title": "صفقاتي",
   "site_description": "منصة الصفقات الرائدة",
-  "updated_at": "2025-08-15T03:01:25.866Z"
+  "updated_at": "2025-08-15T03:09:25.547Z"
 };
   const SUPABASE_URL = 'https://pwzkdkmaotctabqdbcic.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3emtka21hb3RjdGFicWRiY2ljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwMjI4MTIsImV4cCI6MjA3MDU5ODgxMn0.4xKMXYjKvKGVZKQjKvKGVZKQjKvKGVZKQjKvKGVZKQj';
