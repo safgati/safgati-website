@@ -1,17 +1,17 @@
 
 // نظام الصيانة التلقائي لموقع صفقاتي
-// تم إنشاؤه تلقائياً من لوحة التحكم في 15‏/8‏/2025 5:49:00 ص
+// تم إنشاؤه تلقائياً من لوحة التحكم في 15‏/8‏/2025 6:00:52 ص
 
 (function() {
   'use strict';
   
   const MAINTENANCE_CONFIG = {
-  "id": "default-1755226140527",
+  "id": "default-1755226851897",
   "is_maintenance_mode": true,
   "maintenance_message": "الموقع قيد الصيانة، سنعود قريباً",
   "site_title": "صفقاتي",
   "site_description": "منصة الصفقات الرائدة",
-  "updated_at": "2025-08-15T02:49:00.527Z"
+  "updated_at": "2025-08-15T03:00:51.897Z"
 };
   const SUPABASE_URL = 'https://pwzkdkmaotctabqdbcic.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3emtka21hb3RjdGFicWRiY2ljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwMjI4MTIsImV4cCI6MjA3MDU5ODgxMn0.4xKMXYjKvKGVZKQjKvKGVZKQjKvKGVZKQjKvKGVZKQj';
@@ -19,8 +19,16 @@
   // التحقق من حالة الصيانة
   async function checkMaintenanceStatus() {
     try {
+      console.log('🔄 بدء التحقق من حالة الصيانة...');
+      
       // استخدام الإعدادات المحفوظة أولاً
-      handleMaintenance(MAINTENANCE_CONFIG);
+      console.log('📋 الإعدادات المحفوظة:', MAINTENANCE_CONFIG);
+      
+      // التحقق من الإعدادات المحفوظة أولاً
+      if (MAINTENANCE_CONFIG && MAINTENANCE_CONFIG.is_maintenance_mode) {
+        console.log('🔧 وضع الصيانة مفعل في الإعدادات المحفوظة');
+        handleMaintenance(MAINTENANCE_CONFIG);
+      }
       
       // ثم محاولة جلب أحدث البيانات
       const response = await fetch(SUPABASE_URL + '/rest/v1/site_config?select=*&limit=1', {
@@ -34,7 +42,11 @@
       if (response.ok) {
         const data = await response.json();
         const config = data && data.length > 0 ? data[0] : MAINTENANCE_CONFIG;
+        console.log('📡 البيانات من الخادم:', config);
         handleMaintenance(config);
+      } else {
+        console.log('⚠️ فشل في جلب البيانات من الخادم، استخدام الإعدادات المحفوظة');
+        handleMaintenance(MAINTENANCE_CONFIG);
       }
       
     } catch (error) {
@@ -45,25 +57,41 @@
 
   // معالجة حالة الصيانة
   function handleMaintenance(config) {
-    if (!config || !config.is_maintenance_mode) {
-      return; // الموقع يعمل بشكل طبيعي
+    // تسجيل حالة الصيانة للتشخيص
+    console.log('🔍 فحص حالة الصيانة:', config);
+    
+    if (!config) {
+      console.log('⚠️ لا توجد إعدادات');
+      return;
     }
+    
+    if (!config.is_maintenance_mode) {
+      console.log('✅ الموقع يعمل بشكل طبيعي');
+      return;
+    }
+    
+    console.log('🔧 تفعيل وضع الصيانة...');
 
     // التحقق من أن المستخدم ليس في لوحة التحكم
     if (window.location.hostname.includes('admin') || 
         window.location.pathname.includes('admin') ||
         window.location.hostname.includes('localhost') ||
         window.location.hostname.includes('127.0.0.1') ||
-        window.location.port === '5173') {
+        window.location.port === '5173' ||
+        window.location.hostname === 'localhost') {
+      console.log('🚫 تجاهل الصيانة - صفحة إدارية');
       return;
     }
 
+    console.log('🚀 عرض صفحة الصيانة...');
     // عرض صفحة الصيانة
     showMaintenancePage(config);
   }
 
   // عرض صفحة الصيانة
   function showMaintenancePage(config) {
+    console.log('🎨 إنشاء صفحة الصيانة...');
+    
     document.body.innerHTML = `
       <!DOCTYPE html>
       <html lang="ar" dir="rtl">
@@ -242,9 +270,12 @@
         </div>
         
         <script>
+          console.log('🔄 بدء مراقبة حالة الصيانة...');
+          
           // إعادة التحقق كل 30 ثانية
           setInterval(async function() {
             try {
+              console.log('🔍 فحص دوري لحالة الصيانة...');
               const response = await fetch('${SUPABASE_URL}/rest/v1/site_config?select=*&limit=1', {
                 headers: {
                   'Authorization': 'Bearer ${SUPABASE_ANON_KEY}',
@@ -256,10 +287,14 @@
               if (response.ok) {
                 const data = await response.json();
                 const config = data[0];
+                console.log('📊 حالة الصيانة الحالية:', config);
                 
                 if (config && !config.is_maintenance_mode) {
+                  console.log('✅ تم إيقاف الصيانة، إعادة تحميل الصفحة...');
                   window.location.reload();
                 }
+              } else {
+                console.log('⚠️ فشل في الفحص الدوري');
               }
             } catch (error) {
               console.warn('خطأ في التحقق من الصيانة:', error);
@@ -272,14 +307,19 @@
   }
 
   // تشغيل التحقق عند تحميل الصفحة
+  console.log('🚀 تهيئة نظام الصيانة...');
+  
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('📄 الصفحة جاهزة، بدء التحقق...');
       setTimeout(checkMaintenanceStatus, 1000);
     });
   } else {
+    console.log('📄 الصفحة محملة بالفعل، بدء التحقق...');
     setTimeout(checkMaintenanceStatus, 1000);
   }
 
   // التحقق الدوري كل دقيقة
+  console.log('⏰ تفعيل الفحص الدوري كل دقيقة');
   setInterval(checkMaintenanceStatus, 60000);
 })();
