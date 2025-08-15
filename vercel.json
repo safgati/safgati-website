@@ -19,10 +19,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "functions": {
-    "index.html": {
-      "includeFiles": "maintenance.js"
-    }
-  }
+  ]
 }
