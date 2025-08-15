@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "name": "safgati-website",
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/maintenance.js",
+      "dest": "/maintenance.js",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "functions": {
+    "index.html": {
+      "includeFiles": "maintenance.js"
+    }
+  }
+}
