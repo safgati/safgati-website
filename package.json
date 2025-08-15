@@ -1,13 +1,13 @@
 {
   "name": "safgati-website",
   "version": "1.0.0",
-  "description": "موقع صفقاتي الرسمي مع نظام الصيانة التلقائي",
+  "description": "موقع صفقاتي الرسمي مع نظام الصيانة التلقائي المتقدم",
   "main": "index.html",
   "scripts": {
     "build": "echo 'Build completed'",
     "start": "echo 'Starting server'"
   },
-  "keywords": ["safgati", "deals", "offers", "website"],
+  "keywords": ["safgati", "deals", "offers", "website", "maintenance"],
   "author": "Safgati Team",
   "license": "MIT",
   "homepage": "https://www.safgati.com"
